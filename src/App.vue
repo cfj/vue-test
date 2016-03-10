@@ -32,14 +32,14 @@ export default {
   },
 
   ready () {
-    console.log('ready')
+    this.fetchGreetings()
   },
 
   data () {
     return {
       test: 'hej',
       numClicks: 0,
-      greetings: ['hej', 'hello', 'hei']
+      greetings: []
     }
   },
 
@@ -50,6 +50,12 @@ export default {
 
     addGreeting () {
       this.greetings.push('hallo')
+    },
+
+    fetchGreetings () {
+      let greetings = ['hej', 'hello', 'hei']
+
+      this.$set('greetings', greetings)
     }
   }
 }
