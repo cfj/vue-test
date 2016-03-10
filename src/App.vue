@@ -25,6 +25,7 @@
 
 <script>
 import Hello from './components/Hello'
+import localforage from 'localforage'
 
 export default {
   components: {
@@ -49,13 +50,20 @@ export default {
     },
 
     addGreeting () {
-      this.greetings.push('hallo')
+      this.greetings ? this.greetings.push('hallo') : this.greetings = []
+      localforage.setItem('greetings', this.greetings).then((value) => {
+        console.log(value + ' was set!')
+      }, (error) => {
+        console.error(error)
+      })
     },
 
     fetchGreetings () {
-      let greetings = ['hej', 'hello', 'hei']
-
-      this.$set('greetings', greetings)
+      // let greetings = ['hej', 'hello', 'hei']
+      localforage.getItem('greetings').then((value) => {
+        console.log(value)
+        this.$set('greetings', value)
+      })
     }
   }
 }
