@@ -5,6 +5,7 @@
     <hello v-for="greeting in greetings" :greeting="greeting" :num-clicks="numClicks" track-by="$index"></hello>
     <button v-on:click="increment">Increment</button>
     <button v-on:click="addGreeting">Add greeting</button>
+    <button v-on:click="removeGreeting">Remove greeting</button>
     <p>
       Welcome to your Vue.js app. To get started, take a look at the
       <a href="https://github.com/vuejs-templates/webpack#folder-structure" target="_blank">README</a>
@@ -26,6 +27,15 @@
 <script>
 import Hello from './components/Hello'
 import localforage from 'localforage'
+
+function * greetingGenerator () {
+  yield 'Hej'
+  yield 'Hello'
+  yield 'Hallo'
+  yield 'Hei'
+}
+
+let generateGreeting = greetingGenerator()
 
 export default {
   components: {
@@ -50,7 +60,16 @@ export default {
     },
 
     addGreeting () {
-      this.greetings ? this.greetings.push('hallo') : this.greetings = []
+      this.greetings.push(generateGreeting.next().value || 'default')
+      localforage.setItem('greetings', this.greetings).then((value) => {
+        console.log(value + ' was set!')
+      }, (error) => {
+        console.error(error)
+      })
+    },
+
+    removeGreeting () {
+      this.greetings.pop()
       localforage.setItem('greetings', this.greetings).then((value) => {
         console.log(value + ' was set!')
       }, (error) => {
@@ -59,10 +78,11 @@ export default {
     },
 
     fetchGreetings () {
-      // let greetings = ['hej', 'hello', 'hei']
       localforage.getItem('greetings').then((value) => {
         console.log(value)
-        this.$set('greetings', value)
+        if (value) {
+          this.$set('greetings', value)
+        }
       })
     }
   }
