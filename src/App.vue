@@ -3,9 +3,20 @@
     <img class="logo" src="./assets/logo.png">
     <!--<hello :num-clicks="numClicks"></hello>-->
     <hello v-for="greeting in greetings" :greeting="greeting" :num-clicks="numClicks" track-by="$index"></hello>
+    <time :seconds="seconds" unit="km"></time>
+    <div>equals</div>
+    <time :seconds="seconds" unit="mile"></time>
+    <span>{{seconds}}</span>
+    <distance-result :seconds="seconds" distance="5" distance-name="5k"></distance-result>
+    <distance-result :seconds="seconds" distance="10" distance-name="10k"></distance-result>
+    <distance-result :seconds="seconds" distance="21.098" distance-name="Half marathon"></distance-result>
+    <distance-result :seconds="seconds" distance="42.195" distance-name="Full marathon"></distance-result>
     <button v-on:click="increment">Increment</button>
     <button v-on:click="addGreeting">Add greeting</button>
     <button v-on:click="removeGreeting">Remove greeting</button>
+    <div>
+      <input type="range" min="180" max="540" step="1" v-model="seconds">
+    </div>
     <p>
       Welcome to your Vue.js app. To get started, take a look at the
       <a href="https://github.com/vuejs-templates/webpack#folder-structure" target="_blank">README</a>
@@ -26,6 +37,8 @@
 
 <script>
 import Hello from './components/Hello'
+import Time from './components/Time'
+import DistanceResult from './components/DistanceResult'
 import localforage from 'localforage'
 
 function * greetingGenerator () {
@@ -39,7 +52,9 @@ let generateGreeting = greetingGenerator()
 
 export default {
   components: {
-    Hello
+    Hello,
+    Time,
+    DistanceResult
   },
 
   ready () {
@@ -50,7 +65,8 @@ export default {
     return {
       test: 'hej',
       numClicks: 0,
-      greetings: []
+      greetings: [],
+      seconds: 360
     }
   },
 
@@ -111,5 +127,9 @@ body {
 .logo {
   width: 100px;
   height: 100px
+}
+
+input[type=range] {
+  width: 100%;
 }
 </style>
